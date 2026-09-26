@@ -1,11 +1,55 @@
 // ===============================
-// StudentHub JavaScript
+// StudentHub - Application Logic
 // ===============================
+
+
+// ---------- LOAD DATA ----------
+
+let tasks = JSON.parse(
+    localStorage.getItem("studenthub_tasks")
+) || [];
+
+let subjects = JSON.parse(
+    localStorage.getItem("studenthub_subjects")
+) || [
+    {
+        name: "Artificial Intelligence & ML",
+        code: "AIML",
+        progress: 70
+    },
+    {
+        name: "Operating Systems",
+        code: "OS",
+        progress: 50
+    },
+    {
+        name: "Embedded Systems",
+        code: "ERSO",
+        progress: 40
+    }
+];
+
+
+// ---------- SAVE DATA ----------
+
+function saveData() {
+
+    localStorage.setItem(
+        "studenthub_tasks",
+        JSON.stringify(tasks)
+    );
+
+    localStorage.setItem(
+        "studenthub_subjects",
+        JSON.stringify(subjects)
+    );
+}
 
 
 // ---------- START STUDY ----------
 
 function startStudying() {
+
     document.getElementById("tasks").scrollIntoView({
         behavior: "smooth"
     });
@@ -18,39 +62,106 @@ function startStudying() {
 
 function addTask() {
 
-    const input = document.getElementById("taskInput");
-    const taskText = input.value.trim();
+    const input =
+        document.getElementById("taskInput");
 
-    if (taskText === "") {
+    const text = input.value.trim();
+
+    if (text === "") {
         alert("Please enter a task.");
         return;
     }
 
-    const taskList = document.getElementById("taskList");
-
-    const li = document.createElement("li");
-
-    li.innerHTML = `
-        <label>
-            <input type="checkbox" onchange="updateProgress()">
-            ${taskText}
-        </label>
-    `;
-
-    taskList.appendChild(li);
+    tasks.push({
+        text: text,
+        completed: false
+    });
 
     input.value = "";
+
+    saveData();
+    renderTasks();
+}
+
+
+// ---------- DISPLAY TASKS ----------
+
+function renderTasks() {
+
+    const taskList =
+        document.getElementById("taskList");
+
+    taskList.innerHTML = "";
+
+    tasks.forEach(function(task, index) {
+
+        const li =
+            document.createElement("li");
+
+        li.innerHTML = `
+            <label>
+                <input
+                    type="checkbox"
+                    ${task.completed ? "checked" : ""}
+                    onchange="toggleTask(${index})"
+                >
+
+                <span class="${
+                    task.completed
+                    ? "completed-task"
+                    : ""
+                }">
+                    ${task.text}
+                </span>
+            </label>
+
+            <button
+                onclick="deleteTask(${index})"
+                style="
+                    float:right;
+                    border:none;
+                    background:none;
+                    cursor:pointer;
+                "
+            >
+                🗑️
+            </button>
+        `;
+
+        taskList.appendChild(li);
+    });
 
     updateTaskCount();
     updateProgress();
 }
 
 
+// ---------- COMPLETE TASK ----------
+
+function toggleTask(index) {
+
+    tasks[index].completed =
+        !tasks[index].completed;
+
+    saveData();
+    renderTasks();
+}
+
+
+// ---------- DELETE TASK ----------
+
+function deleteTask(index) {
+
+    tasks.splice(index, 1);
+
+    saveData();
+    renderTasks();
+}
+
+
 // ---------- TASK COUNT ----------
 
 function updateTaskCount() {
-
-    const tasks = document.querySelectorAll("#taskList li");
 
     document.getElementById("taskCount").textContent =
         tasks.length;
@@ -61,21 +172,23 @@ function updateTaskCount() {
 
 function updateProgress() {
 
-    const tasks = document.querySelectorAll("#taskList li");
-    const completed = document.querySelectorAll(
-        "#taskList input[type='checkbox']:checked"
-    );
+    const completed =
+        tasks.filter(
+            task => task.completed
+        ).length;
 
     let progress = 0;
 
     if (tasks.length > 0) {
-        progress = Math.round(
-            (completed.length / tasks.length) * 100
-        );
+
+        progress =
+            Math.round(
+                (completed / tasks.length) * 100
+            );
     }
 
-    document.getElementById("progressValue").textContent =
-        progress + "%";
+    document.getElementById("progressValue")
+        .textContent = progress + "%";
 }
 
 
@@ -83,34 +196,58 @@ function updateProgress() {
 
 function addSubject() {
 
-    const subjectName = prompt(
-        "Enter subject name:"
-    );
+    const name =
+        prompt("Enter subject name:");
 
-    if (!subjectName || subjectName.trim() === "") {
+    if (!name || name.trim() === "") {
         return;
     }
+
+    subjects.push({
+        name: name.trim(),
+        code: "NEW",
+        progress: 0
+    });
+
+    saveData();
+    renderSubjects();
+}
+
+
+// ---------- DISPLAY SUBJECTS ----------
+
+function renderSubjects() {
 
     const subjectList =
         document.getElementById("subjectList");
 
-    const card =
-        document.createElement("div");
+    subjectList.innerHTML = "";
 
-    card.className = "subject-card";
+    subjects.forEach(function(subject) {
 
-    card.innerHTML = `
-        <h3>${subjectName}</h3>
-        <p>New Subject</p>
+        const card =
+            document.createElement("div");
 
-        <div class="bar">
-            <div style="width: 0%"></div>
-        </div>
+        card.className = "subject-card";
 
-        <span>0% completed</span>
-    `;
+        card.innerHTML = `
+            <h3>${subject.name}</h3>
 
-    subjectList.appendChild(card);
+            <p>${subject.code}</p>
+
+            <div class="bar">
+                <div
+                    style="width:${subject.progress}%"
+                ></div>
+            </div>
+
+            <span>
+                ${subject.progress}% completed
+            </span>
+        `;
+
+        subjectList.appendChild(card);
+    });
 
     updateSubjectCount();
 }
@@ -120,13 +257,8 @@ function addSubject() {
 
 function updateSubjectCount() {
 
-    const subjects =
-        document.querySelectorAll(
-            "#subjectList .subject-card"
-        );
-
-    document.getElementById("subjectCount").textContent =
-        subjects.length;
+    document.getElementById("subjectCount")
+        .textContent = subjects.length;
 }
 
 
@@ -135,16 +267,57 @@ function updateSubjectCount() {
 const themeButton =
     document.getElementById("themeButton");
 
-themeButton.addEventListener("click", function () {
+themeButton.addEventListener(
+    "click",
+    function() {
 
-    document.body.classList.toggle("dark-mode");
+        document.body.classList.toggle(
+            "dark-mode"
+        );
 
-    if (
-        document.body.classList.contains("dark-mode")
-    ) {
-        themeButton.textContent = "☀️";
-    } else {
-        themeButton.textContent = "🌙";
+        if (
+            document.body.classList.contains(
+                "dark-mode"
+            )
+        ) {
+
+            themeButton.textContent = "☀️";
+
+            localStorage.setItem(
+                "studenthub_theme",
+                "dark"
+            );
+
+        } else {
+
+            themeButton.textContent = "🌙";
+
+            localStorage.setItem(
+                "studenthub_theme",
+                "light"
+            );
+        }
     }
+);
 
-});
+
+// ---------- LOAD THEME ----------
+
+if (
+    localStorage.getItem(
+        "studenthub_theme"
+    ) === "dark"
+) {
+
+    document.body.classList.add(
+        "dark-mode"
+    );
+
+    themeButton.textContent = "☀️";
+}
+
+
+// ---------- INITIALIZE APP ----------
+
+renderTasks();
+renderSubjects();
