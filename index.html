@@ -1,1 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>StudentHub | Student Management System</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header class="navbar">
+        <div class="logo">StudentHub</div>
+
+        <nav>
+            <a href="#dashboard">Dashboard</a>
+            <a href="#subjects">Subjects</a>
+            <a href="#tasks">Tasks</a>
+            <a href="#progress">Progress</a>
+        </nav>
+
+        <button id="themeButton">🌙</button>
+    </header>
+
+
+    <main>
+
+        <!-- Dashboard -->
+        <section id="dashboard" class="hero">
+
+            <div>
+                <p class="welcome">WELCOME BACK 👋</p>
+
+                <h1>Study smarter.<br>
+                    <span>Achieve more.</span>
+                </h1>
+
+                <p class="description">
+                    Manage your subjects, tasks and study progress
+                    in one simple dashboard.
+                </p>
+
+                <button class="primary-button" onclick="startStudying()">
+                    Start Studying
+                </button>
+            </div>
+
+            <div class="dashboard-card">
+
+                <h3>Today's Progress</h3>
+
+                <div class="progress-circle">
+                    <span id="progressValue">0%</span>
+                </div>
+
+                <p>Keep going! 🚀</p>
+
+            </div>
+
+        </section>
+
+
+        <!-- Statistics -->
+        <section class="stats">
+
+            <div class="stat-card">
+                <h3 id="subjectCount">0</h3>
+                <p>Subjects</p>
+            </div>
+
+            <div class="stat-card">
+                <h3 id="taskCount">0</h3>
+                <p>Tasks</p>
+            </div>
+
+            <div class="stat-card">
+                <h3>0</h3>
+                <p>Notes</p>
+            </div>
+
+            <div class="stat-card">
+                <h3 id="studyHours">0</h3>
+                <p>Study Hours</p>
+            </div>
+
+        </section>
+
+
+        <!-- Subjects -->
+        <section id="subjects" class="section">
+
+            <div class="section-title">
+                <div>
+                    <p class="small-title">LEARNING</p>
+                    <h2>My Subjects</h2>
+                </div>
+
+                <button class="secondary-button" onclick="addSubject()">
+                    + Add Subject
+                </button>
+            </div>
+
+            <div id="subjectList" class="cards">
+
+                <div class="subject-card">
+                    <h3>Artificial Intelligence & ML</h3>
+                    <p>AIML</p>
+                    <div class="bar">
+                        <div style="width: 70%"></div>
+                    </div>
+                    <span>70% completed</span>
+                </div>
+
+                <div class="subject-card">
+                    <h3>Operating Systems</h3>
+                    <p>OS</p>
+                    <div class="bar">
+                        <div style="width: 50%"></div>
+                    </div>
+                    <span>50% completed</span>
+                </div>
+
+                <div class="subject-card">
+                    <h3>Embedded Systems</h3>
+                    <p>ERSO</p>
+                    <div class="bar">
+                        <div style="width: 40%"></div>
+                    </div>
+                    <span>40% completed</span>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Tasks -->
+        <section id="tasks" class="section">
+
+            <div class="section-title">
+                <div>
+                    <p class="small-title">PRODUCTIVITY</p>
+                    <h2>Today's Tasks</h2>
+                </div>
+            </div>
+
+            <div class="task-box">
+
+                <input
+                    type="text"
+                    id="taskInput"
+                    placeholder="Enter a new task..."
+                >
+
+                <button onclick="addTask()">
+                    Add Task
+                </button>
+
+            </div>
+
+            <ul id="taskList"></ul>
+
+        </section>
+
+
+        <!-- Progress -->
+        <section id="progress" class="section progress-section">
+
+            <p class="small-title">YOUR JOURNEY</p>
+
+            <h2>Keep Improving 📈</h2>
+
+            <p>
+                Complete your daily tasks and build a consistent
+                study habit.
+            </p>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+        <p>© 2026 StudentHub | Built by Ajith</p>
+    </footer>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
