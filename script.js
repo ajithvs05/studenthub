@@ -1,3 +1,50 @@
+let timerSeconds = 25 * 60;
+let timerInterval = null;
+
+function updateTimerDisplay() {
+    let minutes = Math.floor(timerSeconds / 60);
+    let seconds = timerSeconds % 60;
+
+    document.getElementById("timerDisplay").textContent =
+        String(minutes).padStart(2, "0") + ":" +
+        String(seconds).padStart(2, "0");
+}
+
+function startTimer() {
+
+    if (timerInterval !== null) {
+        return;
+    }
+
+    timerInterval = setInterval(function() {
+
+        if (timerSeconds > 0) {
+            timerSeconds--;
+            updateTimerDisplay();
+        } else {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            alert("Study session completed! 🎉");
+        }
+
+    }, 1000);
+}
+
+function pauseTimer() {
+    clearInterval(timerInterval);
+    timerInterval = null;
+}
+
+function resetTimer() {
+    clearInterval(timerInterval);
+    timerInterval = null;
+
+    timerSeconds = 25 * 60;
+
+    updateTimerDisplay();
+}
+
+updateTimerDisplay();
 // ===============================
 // StudentHub - Application Logic
 // ===============================
